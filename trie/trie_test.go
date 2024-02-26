@@ -32,7 +32,6 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethdb"
 	"github.com/ethereum/go-ethereum/ethdb/leveldb"
@@ -554,6 +553,13 @@ func BenchmarkHash(b *testing.B) {
 	trie.Hash()
 }
 
+type account struct {
+	Nonce   uint64
+	Balance *big.Int
+	Root    common.Hash
+	Code    []byte
+}
+
 // Benchmarks the trie Commit following a Hash. Since the trie caches the result of any operation,
 // we cannot use b.N as the number of hashing rouns, since all rounds apart from
 // the first one will be NOOP. As such, we'll use b.N as the number of account to
@@ -562,7 +568,7 @@ func BenchmarkCommitAfterHash(b *testing.B) {
 	b.Run("no-onleaf", func(b *testing.B) {
 		benchmarkCommitAfterHash(b, nil)
 	})
-	var a types.StateAccount
+	var a account
 	onleaf := func(paths [][]byte, hexpath []byte, leaf []byte, parent common.Hash) error {
 		rlp.DecodeBytes(leaf, &a)
 		return nil
@@ -658,7 +664,7 @@ func makeAccounts(size int) (addresses [][20]byte, accounts [][]byte) {
 		balanceBytes := make([]byte, numBytes)
 		random.Read(balanceBytes)
 		balance := new(big.Int).SetBytes(balanceBytes)
-		data, _ := rlp.EncodeToBytes(&types.StateAccount{Nonce: nonce, Balance: balance, Root: root, CodeHash: code})
+		data, _ := rlp.EncodeToBytes(&account{nonce, balance, root, code})
 		accounts[i] = data
 	}
 	return addresses, accounts

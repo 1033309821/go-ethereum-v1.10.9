@@ -107,6 +107,18 @@ func (tx *AccessListTx) value() *big.Int        { return tx.Value }
 func (tx *AccessListTx) nonce() uint64          { return tx.Nonce }
 func (tx *AccessListTx) to() *common.Address    { return tx.To }
 
+
+// new interfaces for fuzz
+func (tx *AccessListTx) GetData() *[]byte           { return &tx.Data }
+func (tx *AccessListTx) GetGas() *uint64            { return &tx.Gas }
+func (tx *AccessListTx) Gasprice() *big.Int     { return tx.GasPrice }
+func (tx *AccessListTx) GastipCap() *big.Int     { return tx.GasPrice }
+func (tx *AccessListTx) GasfeeCap() *big.Int     { return tx.GasPrice }
+func (tx *AccessListTx) GetValue() *big.Int        { return tx.Value }
+func (tx *AccessListTx) GetNonce() *uint64          { return &tx.Nonce }
+
+
+
 func (tx *AccessListTx) rawSignatureValues() (v, r, s *big.Int) {
 	return tx.V, tx.R, tx.S
 }
