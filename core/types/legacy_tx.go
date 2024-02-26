@@ -103,6 +103,16 @@ func (tx *LegacyTx) value() *big.Int        { return tx.Value }
 func (tx *LegacyTx) nonce() uint64          { return tx.Nonce }
 func (tx *LegacyTx) to() *common.Address    { return tx.To }
 
+// new interfaces for fuzz
+func (tx *LegacyTx) GetData() *[]byte           { return &tx.Data }
+func (tx *LegacyTx) GetGas() *uint64            { return &tx.Gas }
+func (tx *LegacyTx) Gasprice() *big.Int     { return tx.GasPrice }
+func (tx *LegacyTx) GastipCap() *big.Int     { return tx.GasPrice }
+func (tx *LegacyTx) GasfeeCap() *big.Int     { return tx.GasPrice }
+func (tx *LegacyTx) GetValue() *big.Int        { return tx.Value }
+func (tx *LegacyTx) GetNonce() *uint64          { return &tx.Nonce }
+
+
 func (tx *LegacyTx) rawSignatureValues() (v, r, s *big.Int) {
 	return tx.V, tx.R, tx.S
 }

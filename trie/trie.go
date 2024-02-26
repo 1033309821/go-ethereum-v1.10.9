@@ -24,10 +24,8 @@ import (
 	"sync"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/rlp"
 )
 
 var (
@@ -176,10 +174,6 @@ func (t *Trie) TryGetNode(path []byte) ([]byte, int, error) {
 }
 
 func (t *Trie) tryGetNode(origNode node, path []byte, pos int) (item []byte, newnode node, resolved int, err error) {
-	// If non-existent path requested, abort
-	if origNode == nil {
-		return nil, nil, 0, nil
-	}
 	// If we reached the requested path, return the current node
 	if pos >= len(path) {
 		// Although we most probably have the original node expanded, encoding
@@ -199,6 +193,10 @@ func (t *Trie) tryGetNode(origNode node, path []byte, pos int) (item []byte, new
 	}
 	// Path still needs to be traversed, descend into children
 	switch n := (origNode).(type) {
+	case nil:
+		// Non-existent path requested, abort
+		return nil, nil, 0, nil
+
 	case valueNode:
 		// Path prematurely ended, abort
 		return nil, nil, 0, nil
@@ -246,14 +244,6 @@ func (t *Trie) Update(key, value []byte) {
 	if err := t.TryUpdate(key, value); err != nil {
 		log.Error(fmt.Sprintf("Unhandled trie error: %v", err))
 	}
-}
-
-func (t *Trie) TryUpdateAccount(key []byte, acc *types.StateAccount) error {
-	data, err := rlp.EncodeToBytes(acc)
-	if err != nil {
-		return fmt.Errorf("can't encode object at %x: %w", key[:], err)
-	}
-	return t.TryUpdate(key, data)
 }
 
 // TryUpdate associates key with value in the trie. Subsequent calls to
