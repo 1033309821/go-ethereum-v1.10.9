@@ -95,6 +95,15 @@ func (tx *DynamicFeeTx) value() *big.Int        { return tx.Value }
 func (tx *DynamicFeeTx) nonce() uint64          { return tx.Nonce }
 func (tx *DynamicFeeTx) to() *common.Address    { return tx.To }
 
+// new interfaces for fuzz
+func (tx *DynamicFeeTx) GetData() *[]byte           { return &tx.Data }
+func (tx *DynamicFeeTx) GetGas() *uint64            { return &tx.Gas }
+func (tx *DynamicFeeTx) Gasprice() *big.Int     { return tx.GasFeeCap }
+func (tx *DynamicFeeTx) GastipCap() *big.Int     { return tx.GasTipCap }
+func (tx *DynamicFeeTx) GasfeeCap() *big.Int     { return tx.GasFeeCap }
+func (tx *DynamicFeeTx) GetValue() *big.Int        { return tx.Value }
+func (tx *DynamicFeeTx) GetNonce() *uint64          { return &tx.Nonce }
+
 func (tx *DynamicFeeTx) rawSignatureValues() (v, r, s *big.Int) {
 	return tx.V, tx.R, tx.S
 }

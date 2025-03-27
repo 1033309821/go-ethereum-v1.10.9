@@ -278,8 +278,7 @@ web3._extend({
 		new web3._extend.Method({
 			name: 'stacks',
 			call: 'debug_stacks',
-			params: 1,
-			inputFormatter: [null],
+			params: 0,
 			outputFormatter: console.log
 		}),
 		new web3._extend.Method({
@@ -388,12 +387,6 @@ web3._extend({
 		new web3._extend.Method({
 			name: 'standardTraceBadBlockToFile',
 			call: 'debug_standardTraceBadBlockToFile',
-			params: 2,
-			inputFormatter: [null, null]
-		}),
-		new web3._extend.Method({
-			name: 'intermediateRoots',
-			call: 'debug_intermediateRoots',
 			params: 2,
 			inputFormatter: [null, null]
 		}),

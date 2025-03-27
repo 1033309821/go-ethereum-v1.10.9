@@ -75,17 +75,39 @@ type TxData interface {
 	chainID() *big.Int
 	accessList() AccessList
 	data() []byte
+	GetData() *[]byte	// add interface for fuzz //
 	gas() uint64
+	GetGas() *uint64	// add interface for fuzz //
 	gasPrice() *big.Int
+	Gasprice() *big.Int	// add interface for fuzz //
 	gasTipCap() *big.Int
+	GastipCap() *big.Int	// add interface for fuzz //
 	gasFeeCap() *big.Int
+	GasfeeCap() *big.Int	// add interface for fuzz //
 	value() *big.Int
+	GetValue()	*big.Int 	// add interface for fuzz //
 	nonce() uint64
+	GetNonce() *uint64	// add interface for fuzz //
 	to() *common.Address
 
 	rawSignatureValues() (v, r, s *big.Int)
 	setSignatureValues(chainID, v, r, s *big.Int)
 }
+
+// add new interfaces for fuzz //
+func (tx *Transaction) GetInnerData() *TxData {
+	return &tx.inner
+}
+func (tx *Transaction) GetData() *[]byte           { return tx.inner.GetData() }
+func (tx *Transaction) GetGas() *uint64            { return tx.inner.GetGas() }
+func (tx *Transaction) Gasprice() *big.Int     { return tx.inner.Gasprice() }
+func (tx *Transaction) GastipCap() *big.Int     { return tx.inner.GastipCap() }
+func (tx *Transaction) GasfeeCap() *big.Int     { return tx.inner.GasfeeCap() }
+func (tx *Transaction) GetValue() *big.Int        { return tx.Value() }
+func (tx *Transaction) GetNonce() *uint64          { return tx.inner.GetNonce() }
+
+
+// ====================== end =================== //
 
 // EncodeRLP implements rlp.Encoder
 func (tx *Transaction) EncodeRLP(w io.Writer) error {
